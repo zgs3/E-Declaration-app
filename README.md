@@ -10,8 +10,14 @@ make prepare
 ```
 
 3. Prepare MySQL database connection using credentials from .env file
+```
+MYSQL_DATABASE=nordspace_db
+MYSQL_USER=nordspace
+MYSQL_PASSWORD=nordspace
+DB_PORT=3306
+```
 
-4. Seed DB
+5. Seed DB
 ```
 make seed
 ```
