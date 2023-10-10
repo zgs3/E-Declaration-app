@@ -1,0 +1,23 @@
+title = "Account"
+url = "/account/:code?"
+layout = "default"
+description = "Sign in, registration and account management."
+hidden = "0"
+
+[account]
+redirect = "account"
+paramCode = "code"
+==
+<div class="container">
+    <div class="row pb-3 justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="mb-4">
+                {% component 'account' %}
+            </div>
+        <p>
+            <a class="btn btn-outline-primary" href="{{ 'forgot-password'|page }}">Forgotten your password?</a>
+        </p>
+        </div>
+    </div>
+</div>
+

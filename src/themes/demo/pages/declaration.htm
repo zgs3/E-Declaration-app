@@ -1,0 +1,111 @@
+url = "/declaration"
+layout = "default"
+title = "Declaration"
+meta_title = "E-Declaration"
+hidden = 0
+==
+<?php
+
+use Ns\declarationForm\Models\DeclarationModel;
+use Ns\declarationForm\Models\BillDeclarationTypeModel;
+
+function onStart()
+{
+    if (!$this->user) {
+        return Redirect::to('/account');
+    }
+
+    $bill_types = BillDeclarationTypeModel::all()->map(function ($bill_type) {
+        return ['id' => $bill_type->id, 'name' => $bill_type->name];
+    })->keyBy('id')->toArray();
+
+
+    foreach ($bill_types as $id => $bill_type) {
+        $previous_indication = DeclarationModel::where('bill_type_id', $id)
+        ->where('user_id', $this->user->id)
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+        if ($previous_indication) {
+            $bill_types[$id]['previous_indication'] = $previous_indication->previous_indication;  // replace 'previous_indication' with the actual column name
+        } else {
+            $bill_types[$id]['previous_indication'] = '0';  // or whatever default value you want
+        }
+    }
+
+    $this['bill_types'] = $bill_types;
+}
+
+function onSubmit()
+{
+    $data = post();
+
+    $rules = [
+        'declaration.*.user_id' => 'required|integer|exists:users,id',
+        'declaration.*.bill_type_id' => 'required|integer|exists:bill_declaration_type,id',
+        'declaration.*.previous_indication' => 'required|numeric',
+        'declaration.*.new_indication' => 'required|numeric',
+        'declaration.*.image' => 'file|image',
+    ];
+
+    $validator = Validator::make($data, $rules);
+
+    if ($validator->fails()) {
+        throw new October\Rain\Exception\ValidationException($validator);
+    }
+
+    foreach ($data['declaration'] as $index => $declarationData) {
+        $declaration = new Ns\DeclarationForm\Models\DeclarationModel;
+        $declaration->fill($declarationData);
+
+        $uploadedFile = request()->file('declaration.' . $index . '.image');
+
+        if ($uploadedFile && $uploadedFile->isValid()) {
+            $declaration->save();
+
+            $declaration->image()->create(['data' => $uploadedFile]);
+        } else {
+            $declaration->save();
+        }
+    }
+
+    Flash::success('Declarations successfully saved!');
+    return Redirect::back();
+}
+
+?>
+==
+<div class="container">
+    <div class="row pb-5 justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="border-bottom">
+                <h2>Submit Your Utility Indications</h2>
+                <p>Here, you can conveniently input your latest cold water, hot water, and electricity bill indications. For each type of utility, you have the option to upload a photo of the indication, although it’s not mandatory.</p>
+            </div>
+            <form data-request="onSubmit" enctype="multipart/form-data" data-request-files data-request-flash>
+                {% for bill_type in bill_types %}
+                <div class="py-3 border-bottom">
+                    <h3 class="form-label">{{ bill_type['name'] }}</h3>
+                    <input type="hidden" name="declaration[{{ loop.index }}][user_id]" value="{{ user.id }}">
+                    <input type="hidden" name="declaration[{{ loop.index }}][bill_type_id]" value="{{ bill_type['id'] }}">
+                    <div class="my-1">
+                        <label class="form-label" for="previous_indication">Previous Indication</label>
+                        <input value="{{ bill_type['previous_indication']}}" name="declaration[{{ loop.index }}][previous_indication]" type="number" class="form-control" placeholder="0">
+                    </div>
+                    <div class="my-1">
+                        <label class="form-label" for="new_indication">New Indication</label>
+                        <input name="declaration[{{ loop.index }}][new_indication]" type="number" class="form-control" placeholder="0">
+                    </div>
+                    <div class="my-1">
+                        <label class="form-label" for="image">Photo</label>
+                        <input name="declaration[{{ loop.index }}][image]" type="file" accept="image/*" class="form-control">
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="my-3">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+##
+title = "E-Declaration"
+url = "/"
+layout = "default"
+meta_title = "Welcome"
+
+
+==
+<div class="page-index mx-2">
+    <div class="container pb-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <div>
+                    <h1>Welcome to Utility Indications Portal "E-Declaration"!</h1>
+                    <p>
+                        Our platform provides a seamless experience for registered users to submit their cold water,
+                        hot water, and electricity bill indications effortlessly.
+                    </p>
+                    <p>
+                        Your accurate submissions facilitate streamlined billing procedures and ensure
+                        you're charged correctly for your utility consumption. We’re here to simplify your utility
+                        management!
+                    </p>
+                    {% if user %}
+                    <p>
+                        To submit your declaration, simply access the submission <a href="{{ 'declaration'|page }}">form</a>.
+                    </p>
+                    {% else %}
+                    <p>
+                        To start, simply
+                        <a href="{{ 'account'|page }}" class="login-link">log
+                        in</a> to your account and access the submission form. If you're not registered yet, take a
+                        moment to <a href="{{ 'account'|page }}">create an account</a> and join our
+                        community.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+{% if not user %}
+
+    <div class="row pb-5">
+
+        <div class="border-bottom py-3 my-2">
+            <h3>Sign in</h3>
+            {% partial __SELF__ ~ '::signin' %}
+        </div>
+
+        <div class="border-bottom py-3 my-2">
+            {% partial __SELF__ ~ '::register' %}
+        </div>
+
+    </div>
+
+{% else %}
+<div class="row pb-5">
+
+    <div>
+    {% partial __SELF__ ~ '::activation_check' %}
+
+    {% partial __SELF__ ~ '::update' %}
+
+    {% partial __SELF__ ~ '::deactivate_link' %}
+    </div>
+
+</div>
+{% endif %}

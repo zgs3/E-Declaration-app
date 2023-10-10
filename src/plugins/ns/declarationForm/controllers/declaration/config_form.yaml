@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Declaration
+
+# Model Form Field configuration
+form: $/ns/declarationform/models/declaration/fields.yaml
+
+# Model Class name
+modelClass: Ns\DeclarationForm\Models\Declaration
+
+# Default redirect location
+defaultRedirect: ns/declarationform/declaration
+
+# Create page
+create:
+    title: backend::lang.form.create_title
+    redirect: ns/declarationform/declaration/update/:id
+    redirectClose: ns/declarationform/declaration
+
+# Update page
+update:
+    title: backend::lang.form.update_title
+    redirect: ns/declarationform/declaration
+    redirectClose: ns/declarationform/declaration
+
+# Preview page
+preview:
+    title: backend::lang.form.preview_title

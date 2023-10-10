@@ -1,0 +1,23 @@
+[backendLink]
+[sitePicker]
+==
+{% set activeNavLink = activeNavLink|default(this.page.id) %}
+
+<li class="nav-item">
+    <a class="nav-link {{ activeNavLink == 'declaration' ? 'active' }}" href="{{ 'declaration'|page }}">Declaration</a>
+</li>
+<ul class="nav navbar-nav navbar-right">
+    {% if user %}
+    <li class="nav-item">
+        <a class="nav-link {{ activeNavLink == 'account' ? 'active' }}" href="{{ 'account'|page }}">Account</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link " data-request-data="redirect: '/'" data-request="onLogout">Logout</a>
+    </li>
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link {{ activeNavLink == 'declaration' ? 'account' }}" href="{{ 'account'|page }}">Sign In / Sign Up</a>
+    </li>
+    {% endif %}
+</ul>
+
