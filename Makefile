@@ -29,5 +29,5 @@ prepare:
 
 .PHONY: seed
 seed:
-	cd src && php artisan october:migrate
+	cd src && php artisan project:sync
 
